@@ -77,10 +77,12 @@ function deleteThisGoods($thisGoodsID,$loginUserID){
 
     $queryStr ="delete from shop_cart_record where goodsID ={$thisGoodsID} and userID ='{$loginUserID}';";
 
-    $mysqli->query($queryStr);
+    $result =  $mysqli->query($queryStr);
 
     //关闭数据库连接
     $mysqli->close();
+
+    return $result;
 }
 
 if(isset($_SESSION['loginUserID']) || isset($_COOKIE['loginUserID'])){
@@ -95,7 +97,7 @@ if(isset($_SESSION['loginUserID']) || isset($_COOKIE['loginUserID'])){
             echo $arrayJson;
             break;
         case 'deleteGoodsClass' :
-            deleteThisGoods($_POST['thisGoodsID'],$_SESSION['loginUserID']);
+            echo deleteThisGoods($_POST['thisGoodsID'],$_SESSION['loginUserID']);
             break;
     }
 }else{

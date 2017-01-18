@@ -125,22 +125,22 @@
         //img对象
         this.img = new Image();
         this.img.src = this.bigImgUrl;
-        //watch imgNumber改变则改变img
-        this.$watch('imgNumber',function(){
-          this.changeImgSrc(this.img);
-        });
-        //放大镜canvas
-        this.canvasEnlarge = jQuery('.enlarge').get(0);
-        //大图canvas
-        this.bigCanvas = jQuery('.big-canvas').get(0);
-        let bigCanvasContext = this.bigCanvas.getContext('2d');
-        //依据实际图片大小,得到大图canvas的宽高
-        this.bigCanvas.width = this.img.width;
-        this.bigCanvas.height = this.img.height;
-        //待img加载完成,在大图canvas中加入图片对象
         this.img.onload = function(){
+          //放大镜canvas
+          self.canvasEnlarge = jQuery('.enlarge').get(0);
+          //大图canvas
+          self.bigCanvas = jQuery('.big-canvas').get(0);
+          let bigCanvasContext = self.bigCanvas.getContext('2d');
+          //依据实际图片大小,得到大图canvas的宽高
+          self.bigCanvas.width = self.img.width;
+          self.bigCanvas.height = self.img.height;
           bigCanvasContext.drawImage(self.img,0,0);
         };
+      },
+      watch: {
+        imgNumber: function(){
+          this.changeImgSrc(this.img);
+        }
       }
     }
 </script>

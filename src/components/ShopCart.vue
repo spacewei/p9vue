@@ -14,7 +14,7 @@
                 <span class="cart-td total-class table-cell-title">金额:{{total}}</span>
                 <span class="cart-td handle table-cell-title">操作</span>
             </div>
-            <template v-for="shopCartItem in shopCartItems">
+            <template v-for="(shopCartItem,key) in shopCartItems">
                 <div class="cart-tr" :id="'goodsID-'+shopCartItem.goodsID" v-if="shopCartItem.goodsID">
                     <span class="cart-td is-check table-cell-title">
                         <input class="check-this" type="checkbox">
@@ -25,7 +25,7 @@
                     <span class="cart-td number table-cell-title">{{shopCartItem.goodsNumber}}</span>
                     <span class="cart-td total-class table-cell-title">{{shopCartItem.rowTotal}}</span>
                     <span class="cart-td handle table-cell-title">
-                        <button class='delete-this-goods' @click="deleteThisGoods(shopCartItem)">删除商品</button>
+                        <button class='delete-this-goods' @click="deleteThisGoods(shopCartItem,key)">删除商品</button>
                     </span>
                 </div>
             </template>
@@ -43,7 +43,8 @@
                 total:0,
                 rowTotal: 0,
                 shopCartPHPUrl: 'http://localhost/P9Vue/static/PHP/shopCart.php',
-                deleteGoodsID: ''
+                deleteGoodsID: '',
+                loginFlag: this.$store.state.userID
             }
         },
         methods:{
@@ -59,10 +60,6 @@
                         //转换数组中每个json字符串为js object
                         let dataObj = JSON.parse(data[key]);
                         self.shopCartItems.push(dataObj);
-                        //先限制成浮点数,再计算每件商品的价格(存入时已计算,现取消)
-//                            let x = parseFloat(dataObj.price);
-//                            let y = parseInt(dataObj.goodsNumber);
-//                            self.rowTotal = x * y;
                         //累加商品金额
                         self.total = (parseFloat(self.total) + parseFloat(dataObj.rowTotal));
                         //限制购物车总金额为两位小数
@@ -73,30 +70,63 @@
                 };
                 ajax(self.shopCartPHPUrl,sendData,success);
                 //绑定登录后刷新页面
-                jQuery('#login-btn').on('click', function () {
-                    window.location.reload();
-                });
-                //绑定退出后刷新页面
-                jQuery('.login-off').on('click', function () {
-                    window.location.reload();
-                })
+//                jQuery('#login-btn').on('click', function () {
+//                    window.location.reload();
+//                });
+//                //绑定退出后刷新页面
+//                jQuery('.login-off').on('click', function () {
+//                    window.location.reload();
+//                })
             },
-            deleteThisGoods: function (shopCartItem) {
+            deleteThisGoods: function (shopCartItem,key) {
+                console.log("删除前:"+this.shopCartItems);
+                let self = this;
                 this.deleteGoodsID = shopCartItem.goodsID;
                 let sendData = {
                     shopCartFlag: "deleteGoodsClass",
                     thisGoodsID: this.deleteGoodsID
                 };
-//                let success = function(){
-//                    shopCartItem.goodsID = false;
-//                };
-//                shopCartItem.goodsID = false;
-                ajax(this.shopCartPHPUrl,sendData);
-                shopCartItem.goodsID = false;
+                let success = function(data){
+                    if(data){
+                        self.shopCartItems.splice(key,1);
+                    }
+                    console.log("删除后:"+self.shopCartItems);
+                };
+                ajax(this.shopCartPHPUrl,sendData,success);
+            },
+            reloadShopCart: function(){
+                if(this.$store.state.userID){
+                    window.location.reload();
+                }
             }
         },
         created: function(){
             this.initShopCart();
+        },
+        watch: {
+            shopCartItems: {
+                handler: function(){
+                    let total = 0;
+                    let numberAll = 0;
+                    for (let item in this.shopCartItems){
+                        console.log(this.shopCartItems[item].rowTotal);
+                        total = parseFloat(this.shopCartItems[item].rowTotal) + parseFloat(total);
+                        numberAll = parseInt(this.shopCartItems[item].goodsNumber) + parseInt(numberAll);
+                    }
+                    this.total = parseFloat(total).toFixed(2);
+                    this.numberAll = parseInt(numberAll);
+                },
+                deep: true
+            }
+//            loginFlag: {
+//                handle: function (){
+//                    console.log(this.loginFlag);
+//                    if(this.$store.state.userID){
+//                        window.location.reload();
+//                    }
+//                },
+//                deep: true
+//            }
         }
     }
 </script>
