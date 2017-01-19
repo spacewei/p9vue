@@ -109,6 +109,8 @@
                 self.sendSigned();
                 self.storeUserID(data.userID);
                 self.loginShow = '欢迎' + data.userName;
+                //登录后重载页面
+                window.location.reload();
                 break;
             }
           };
@@ -122,7 +124,9 @@
             self.signed=false;
             self.sendSigned();
             self.loginShow = "";
-            self.storeUserID(0)
+            self.storeUserID(0);
+            //退出页面后重载页面
+            window.location.reload();
           };
           ajax(self.loginUrl,ajaxData,success);
         },

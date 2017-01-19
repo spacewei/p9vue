@@ -43,8 +43,7 @@
                 total:0,
                 rowTotal: 0,
                 shopCartPHPUrl: 'http://localhost/P9Vue/static/PHP/shopCart.php',
-                deleteGoodsID: '',
-                loginFlag: this.$store.state.userID
+                deleteGoodsID: ''
             }
         },
         methods:{
@@ -69,17 +68,9 @@
                     }
                 };
                 ajax(self.shopCartPHPUrl,sendData,success);
-                //绑定登录后刷新页面
-//                jQuery('#login-btn').on('click', function () {
-//                    window.location.reload();
-//                });
-//                //绑定退出后刷新页面
-//                jQuery('.login-off').on('click', function () {
-//                    window.location.reload();
-//                })
             },
             deleteThisGoods: function (shopCartItem,key) {
-                console.log("删除前:"+this.shopCartItems);
+//                console.log("删除前:"+this.shopCartItems);
                 let self = this;
                 this.deleteGoodsID = shopCartItem.goodsID;
                 let sendData = {
@@ -90,7 +81,7 @@
                     if(data){
                         self.shopCartItems.splice(key,1);
                     }
-                    console.log("删除后:"+self.shopCartItems);
+//                    console.log("删除后:"+self.shopCartItems);
                 };
                 ajax(this.shopCartPHPUrl,sendData,success);
             },
@@ -109,7 +100,6 @@
                     let total = 0;
                     let numberAll = 0;
                     for (let item in this.shopCartItems){
-                        console.log(this.shopCartItems[item].rowTotal);
                         total = parseFloat(this.shopCartItems[item].rowTotal) + parseFloat(total);
                         numberAll = parseInt(this.shopCartItems[item].goodsNumber) + parseInt(numberAll);
                     }
@@ -118,15 +108,6 @@
                 },
                 deep: true
             }
-//            loginFlag: {
-//                handle: function (){
-//                    console.log(this.loginFlag);
-//                    if(this.$store.state.userID){
-//                        window.location.reload();
-//                    }
-//                },
-//                deep: true
-//            }
         }
     }
 </script>
