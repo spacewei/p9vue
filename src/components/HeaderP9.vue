@@ -2,7 +2,7 @@
     <header class="header-shop center-all">
         <canvas class="sign"></canvas>
         <span class="shop-cart-a" v-if="signed">
-            <router-link to="/shop-cart">{{shopCartText}}{{signed}}</router-link>
+            <router-link to="/shop-cart">{{shopCartText}}</router-link>
         </span>
         <login-div v-on:sendSigned="getSigned"></login-div>
     </header>
