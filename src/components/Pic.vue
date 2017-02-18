@@ -4,20 +4,8 @@
       <canvas class="enlarge"></canvas>
     </canvas>
     <ul class="small-img-ul">
-      <li class="small-img" @mouseover="carouselStop(0)" :class="{redBorder: (imgNumber===0)}">
-        <img :src="sImgStr+sImg0">
-      </li>
-      <li class="small-img" @mouseover="carouselStop(1)" :class="{redBorder: (imgNumber===1)}">
-        <img :src="sImgStr+sImg1">
-      </li>
-      <li class="small-img" @mouseover="carouselStop(2)" :class="{redBorder: (imgNumber===2)}">
-        <img :src="sImgStr+sImg2">
-      </li>
-      <li class="small-img" @mouseover="carouselStop(3)" :class="{redBorder: (imgNumber===3)}">
-        <img :src="sImgStr+sImg3">
-      </li>
-      <li class="small-img" @mouseover="carouselStop(4)" :class="{redBorder: (imgNumber===4)}">
-        <img :src="sImgStr+sImg4">
+      <li v-for="(value,key) in imgArray" class="small-img" @mouseover="carouselStop(key)" :class="{redBorder: (imgNumber===key)}">
+        <img :src="value.sImg">
       </li>
     </ul>
     <div>{{imgNumber}}</div>
@@ -42,6 +30,28 @@
               sImg2 :"goods_60x60_2.jpg",
               sImg3 :"goods_60x60_3.jpg",
               sImg4 :"goods_60x60_4.jpg",
+              imgArray:[
+                  {
+                    bImg: require('../assets/img/p9Picture/bigPicture/goods_430x430_0.jpg'),
+                    sImg: require('../assets/img/p9Picture/smallPicture/goods_60x60_0.jpg')
+                  },
+                  {
+                    bImg: require('../assets/img/p9Picture/bigPicture/goods_430x430_1.jpg'),
+                    sImg: require('../assets/img/p9Picture/smallPicture/goods_60x60_1.jpg')
+                  },
+                  {
+                    bImg: require('../assets/img/p9Picture/bigPicture/goods_430x430_2.jpg'),
+                    sImg: require('../assets/img/p9Picture/smallPicture/goods_60x60_2.jpg')
+                  },
+                  {
+                    bImg: require('../assets/img/p9Picture/bigPicture/goods_430x430_3.jpg'),
+                    sImg: require('../assets/img/p9Picture/smallPicture/goods_60x60_3.jpg')
+                  },
+                  {
+                    bImg: require('../assets/img/p9Picture/bigPicture/goods_430x430_4.jpg'),
+                    sImg: require('../assets/img/p9Picture/smallPicture/goods_60x60_4.jpg')
+                  }
+              ],
               bigImgUrl: "",
               carousel: {},
               zoomP: {},
@@ -74,8 +84,7 @@
         },
         /*watch imgNumber变化,改变img的src*/
         changeImgSrc: function(img){
-          this.bigImgUrl = this.bImgStr + "goods_430x430_" + this.imgNumber + ".jpg";
-          img.src = this.bigImgUrl;
+          img.src = this.imgArray[this.imgNumber].bImg;
         },
         /*坐标系变换*/
         coordinateChange: function(canvasDom,x,y){
@@ -120,11 +129,9 @@
       mounted: function(){
         let self = this;
         self.carouselStart(0,self);
-        //由ImgNumber变动得到的大图url
-        this.bigImgUrl = this.bImgStr + "goods_430x430_" + this.imgNumber + ".jpg";
         //img对象
         this.img = new Image();
-        this.img.src = this.bigImgUrl;
+        this.img.src = this.imgArray[this.imgNumber].bImg;
         this.img.onload = function(){
           //放大镜canvas
           self.canvasEnlarge = jQuery('.enlarge').get(0);
